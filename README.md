@@ -1,7 +1,10 @@
 # Distance of Song - Twitter Bot
 
-This is a project made to test me. I had to do a different and new thing to me,
-to prove that's I can.
+A Twitter Bot that calculate how many times a music can be played in determined
+trip that's the user provide both by a direct message.
+
+>This is a project made to test me. I had to do a different and new thing to me,
+>to prove that's I can take it.
 
 ## Installation
 
@@ -9,7 +12,7 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install all the
 libraries on `requirements.txt` file.
 
 ```bash
-python -m pip install requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 ## Usage
@@ -37,6 +40,10 @@ python main.py
 ```
 
 >Remember to get in "src" folder to run
+
+### Follow it
+
+* @distanceSongBot
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to
