@@ -1,0 +1,8 @@
+# Virtuals environments
+.env
+.venv
+env
+venv
+
+# Cache of Python extension
+__pycache__/
