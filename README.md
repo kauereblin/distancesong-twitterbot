@@ -43,7 +43,7 @@ python main.py
 
 ### Follow it
 
-* @distanceSongBot
+* [@distanceSongBot](https://twitter.com/distanceSongBot)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to
