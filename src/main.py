@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 import tweepy
-# from time import sleep
+from time import sleep
 
 from spot_api import query_music_duration
 from route_timer import query_trip_duration
@@ -10,8 +10,16 @@ from route_timer import query_trip_duration
 from config import *
 
 
-""" def sleep_minutes(minutes):
-    sleep(minutes * 60) """
+def sleep_minutes(minutes):
+    sleep(minutes * 60)
+
+
+def auth_tweepy_api():
+    auth = tweepy.OAuthHandler(CONSUMER_KEY_TT, CONSUMER_SECRET_TT)
+    auth.set_access_token(ACCESS_TOKEN_TT, ACCESS_TOKEN_SECRET_TT)
+    api_bot = tweepy.API(auth, wait_on_rate_limit=True)
+
+    return api_bot
 
 
 def request_dms(bot):
@@ -22,12 +30,12 @@ def request_dms(bot):
         return False
 
 
-def get_text(dms):
+def get_dm_text(dms):
     text = dms[0].message_create['message_data']['text']
     if text != '':
         return text, dms[0].id
     elif text == '':
-        return False
+        return False, dms[0].id
     else:
         raise Exception('Invalid text type')
 
@@ -62,36 +70,44 @@ vezes na viagem de {origin} para {destiny}!'
 
 
 def main():
-    auth = tweepy.OAuthHandler(CONSUMER_KEY_TT, CONSUMER_SECRET_TT)
-    auth.set_access_token(ACCESS_TOKEN_TT, ACCESS_TOKEN_SECRET_TT)
-    api_bot = tweepy.API(auth)
+    api_bot = auth_tweepy_api()
 
-    dms = request_dms(api_bot)
+    while True:
+        dms = request_dms(api_bot)
 
-    if dms:
-        _text = get_text(dms)[0]
-        dm_id = get_text(dms)[1]
-    else:
-        raise Exception('Invalid Direct Message')
+        if dms:
+            _text, dm_id = get_dm_text(dms)
 
-    data_list = get_msg_data(_text)
+            if _text:
+                data_list = get_msg_data(_text)
+            else:
+                api_bot.send_direct_message(dm_id, ERROR_SPOT)
 
-    items = set_items(data_list)
+            items = set_items(data_list)
 
-    update(items, api_bot, dm_id)
+            update(items, api_bot, dm_id)
+            sleep_minutes(1)
+        else:
+            sleep_minutes(5)
+            api_bot.update_status('Será que alguém gosta de mim?')
 
 
 def update(items, bot, dm_id):
-    music_duration = query_music_duration(items[0], items[1])
+    music_duration, music = query_music_duration(items[0], items[1])
     trip_duration = query_trip_duration(items[2], items[3])
 
-    bot.update_profile(name=f'Ouvindo {items[1]} de {items[0]}')
+    if trip_duration:
+        bot.update_profile(name=f'Ouvindo {music} de {items[0]}',
+                           location=f'Indo para {items[3]}')
 
-    message = set_message(music_duration, trip_duration,
-                          items[1], items[2], items[3])
-    bot.update_status(status=message)
+        message = set_message(music_duration, trip_duration,
+                              music, items[2], items[3])
+        bot.update_status(status=message)
 
-    bot.destroy_direct_message(dm_id)
+        bot.destroy_direct_message(dm_id)
+
+    else:
+        bot.send_direct_message(dm_id, ERROR_MAP)
 
 
 if __name__ == "__main__":

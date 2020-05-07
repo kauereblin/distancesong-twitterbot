@@ -17,10 +17,13 @@ def query_trip_duration(origin, destiny):
     map_url = BASE_URL + locations_json
 
     request = urllib.request.urlopen(map_url)
-    json_response = request.read().decode(encoding='utf-8')
+    if request:
+        json_response = request.read().decode(encoding='utf-8')
 
-    trip_duration = loads(json_response)['route']['time']
+        trip_duration = loads(json_response)['route']['time']
 
-    request.close()
+        request.close()
 
-    return trip_duration
+        return trip_duration
+    else:
+        return False

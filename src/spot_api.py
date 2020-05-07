@@ -19,7 +19,7 @@ def query_music_duration(artist, music):
         raise Exception('Artist or Music is not valid')
 
     for track in results['tracks']['items']:
-        if track['name'] == music:
-            return track['duration_ms'] // 1000
+        if track['name'].lower() == music.lower():
+            return track['duration_ms'] // 1000, track['name']
     else:
         raise Exception('Artist or Music not found')
