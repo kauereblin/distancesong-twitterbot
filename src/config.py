@@ -12,14 +12,3 @@ BASE_URL = 'http://www.mapquestapi.com/directions/v2/optimizedroute?key=ZbNLwtP5
 # Spotipy API
 SPOTIPY_CLIENT_ID = '2c9767932c4f4b529c8f3a758a777c3b'
 SPOTIPY_CLIENT_SECRET = '3a814781169d446eb4b023cf34ce28a3'
-
-
-ERROR_SPOT = '''Ops, que pena!
-Houve um erro na busca da sua música ou trajeto.
-Sertifique-se que o nome da música esteja igual ao Spotify ou
-os locais desejados e tente novamente.'''
-
-ERROR_MAP = '''Ops, que pena!
-Houve um erro na busca do seu trajeto.
-Sertifique-se que o nome dos locais desejados estão certos e separados por vírgula
-e tente novamente.'''
