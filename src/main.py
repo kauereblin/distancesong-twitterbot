@@ -71,6 +71,7 @@ vezes na viagem de {origin} para {destiny}!'
 
 def main():
     api_bot = auth_tweepy_api()
+    messages = []
 
     while True:
         dms = request_dms(api_bot)
@@ -81,18 +82,16 @@ def main():
             if _text:
                 data_list = get_msg_data(_text)
             else:
-                api_bot.send_direct_message(dm_id, ERROR_SPOT)
+                pass
 
             items = set_items(data_list)
 
-            update(items, api_bot, dm_id)
-            sleep_minutes(1)
+            messages.append(update(items, api_bot, dm_id, messages))
         else:
-            sleep_minutes(5)
-            api_bot.update_status('Será que alguém gosta de mim?')
+            pass
 
 
-def update(items, bot, dm_id):
+def update(items, bot, dm_id, messages):
     music_duration, music = query_music_duration(items[0], items[1])
     trip_duration = query_trip_duration(items[2], items[3])
 
@@ -102,9 +101,13 @@ def update(items, bot, dm_id):
 
         message = set_message(music_duration, trip_duration,
                               music, items[2], items[3])
-        bot.update_status(status=message)
+        if message in messages:
+            bot.destroy_direct_message(dm_id)
+        else:
+            bot.update_status(status=message)
+            bot.destroy_direct_message(dm_id)
 
-        bot.destroy_direct_message(dm_id)
+        return message
 
     else:
         bot.send_direct_message(dm_id, ERROR_MAP)
